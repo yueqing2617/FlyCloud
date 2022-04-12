@@ -1,0 +1,29 @@
+database:
+  type: "sqlite3" #
+#  host: "127.0.0.1" # 当前服务器地址，连接类型为sqlite时，该项无效
+#  port: 3306
+  database: "./database/database.db" # 数据库名称，连接类型为sqlite时，该项为文件名
+#  username: "root" # 数据库用户名，连接类型为sqlite时，该项无效
+#  password: "123456" # 数据库密码，连接类型为sqlite时，该项无效
+#  max_idle_time: 3600 # 最大空闲时间，单位秒
+#  max_open_conns: 100 # 最大连接数
+#  conn_max_lifetime: 3600 # 连接最大存活时间，单位秒
+#  suffix: "charset=utf8&collation=utf8_general_ci&parseTime=True&loc=Local" # mysql数据库连接参数
+
+logger:
+  path: "./runtime/logger.log"
+
+cache:
+  shards: 2 #存储的条目数量，值必须是2的幂
+  life_window: 5 #缓存的生命周期，单位分钟
+  max_entries_window: 0 #每个窗口最大的条目数量，0表示不限制
+  max_entry_size: 0 #每个条目最大的大小，0表示不限制
+  hard_max_cache_size: 0 #硬限制的最大缓存大小，0表示不限制
+  verbose: true #是否打印调试信息
+
+jwt:
+  private_key: "yueqing2617*&%&*%&*%Empty(*^*(&$&^"
+  expires_at: 320 #过期时间，单位分钟
+  issuer: "flycloud" #签发者
+  audience: "user" #接收者
+  subject: "Fly" #主题
