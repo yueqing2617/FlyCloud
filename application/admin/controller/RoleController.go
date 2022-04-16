@@ -9,12 +9,13 @@ import (
 	"FlyCloud/serves/cache"
 	acs "FlyCloud/serves/casbin"
 	"FlyCloud/serves/database"
+	"net/http"
+
 	"github.com/allegro/bigcache"
 	"github.com/casbin/casbin"
 	gormadapter "github.com/casbin/gorm-adapter"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"net/http"
 )
 
 // RoleController ...
@@ -43,8 +44,15 @@ func (c *RoleControllerImpl) GetAllRoles(ctx *gin.Context) {
 		response.Error(ctx, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	// 从获取的角色，排除超级管理员
+	var role []models.Roles
+	for _, v := range roles {
+		if v.Alias != "super" {
+			role = append(role, v)
+		}
+	}
 
-	response.Success(ctx, gin.H{"data": roles, "total": total}, "success")
+	response.Success(ctx, gin.H{"data": role, "total": total}, "success")
 }
 
 // @Title Find

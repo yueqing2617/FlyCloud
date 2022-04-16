@@ -4,14 +4,16 @@ import (
 	"FlyCloud/application"
 	"FlyCloud/models"
 	"FlyCloud/pkg/jwt"
+	"FlyCloud/pkg/md5"
 	"FlyCloud/pkg/response"
 	"FlyCloud/pkg/system"
 	"FlyCloud/serves/cache"
 	"FlyCloud/serves/database"
+	"net/http"
+
 	"github.com/allegro/bigcache"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"net/http"
 )
 
 // 管理员管理控制器
@@ -38,40 +40,33 @@ func (a adminController) Select(ctx *gin.Context) {
 		return
 	}
 	// 过滤条件 = 查询条件
-	var where = map[string]interface{}{}
-	if model.ID != 0 {
-		where["id"] = model.ID
-	}
-	if model.Status != 0 {
-		where["status"] = model.Status
-	}
-	if model.RolesName != "" {
-		where["roles_name"] = model.RolesName
-	}
-	// 多条件查询
-	db := a.Db.Model(models.Admin{})
-	// 查询过滤 用户名 模糊查询
+	db := a.Db.Model(models.Admin{}).Where("id > 0")
+	// 查询条件
 	if model.Username != "" {
 		db = db.Where("username like ?", "%"+model.Username+"%")
 	}
-	// 查询过滤 用户昵称 模糊查询
-	if model.Nickname != "" {
-		db = db.Where("nickname like ?", "%"+model.Nickname+"%")
+	if model.Nickname != "" { // 模糊查询
+		db = db.Where("nickname LIKE ?", "%"+model.Nickname+"%")
 	}
-
-	// 分页是否有值
-	var page = 1
-	if model.PageNum != 0 {
-		page = model.PageNum
+	if model.Telephone != "" {
+		db = db.Where("telephone = ?", model.Telephone)
 	}
-	var pageSize = 10
-	if model.PageSize != 0 {
-		pageSize = model.PageSize
+	if model.Department != "" { // 模糊查询
+		db = db.Where("department LIKE ?", "%"+model.Department+"%")
+	}
+	if model.Sex != "" {
+		db = db.Where("sex = ?", model.Sex)
+	}
+	if model.Status != 0 {
+		db = db.Where("status = ?", model.Status)
+	}
+	if model.RolesName != "" {
+		db = db.Where("roles_name = ?", model.RolesName)
 	}
 	// 查询
-	var admins []models.Admin
 	var total int
-	if err := db.Where(where).Count(&total).Limit(page).Offset((page - 1) * pageSize).Find(&admins).Error; err != nil {
+	var admins []models.Admin
+	if err := db.Count(&total).Find(&admins).Error; err != nil {
 		response.Error(ctx, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -94,6 +89,8 @@ func (a adminController) Insert(ctx *gin.Context) {
 		response.Error(ctx, err.Error(), http.StatusBadRequest)
 		return
 	}
+	// 更改状态
+	model.Status = 1
 	// 新增
 	if err := a.Db.Create(&model).Error; err != nil {
 		response.Error(ctx, err.Error(), http.StatusInternalServerError)
@@ -117,6 +114,10 @@ func (a adminController) Update(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(&model); err != nil {
 		response.Error(ctx, err.Error(), http.StatusBadRequest)
 		return
+	}
+	// 如果密码不为空，则更新密码
+	if model.Password != "" {
+		model.Password = md5.Encry(model.Password)
 	}
 	// 更新
 	if err := a.Db.Model(&model).Where("id = ?", id).Updates(model).Error; err != nil {

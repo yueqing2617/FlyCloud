@@ -3,6 +3,7 @@ package models
 import (
 	"FlyCloud/pkg/Db"
 	"FlyCloud/pkg/md5"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -71,9 +72,3 @@ func IsExistAdminByTelephone(db *gorm.DB, telephone string) bool {
 	}
 	return false
 }
-
-//// 定义字段映射，role_name字段为外键，需要自动转换
-//func (admin *Admin) BeforeCreate(scope *gorm.Scope) error {
-//	scope.SetColumn("RolesName", admin.Roles.Alias)
-//	return nil
-//}

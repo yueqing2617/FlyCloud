@@ -4,16 +4,17 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
+	"time"
 )
 
 // 判断文件或文件夹是否存在
 func IsExist(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
-		return true, nil
+		return true, err
 	}
 	if os.IsNotExist(err) {
-		return false, nil
+		return false, err
 	}
 	return false, err
 }
@@ -41,4 +42,36 @@ func RandString(n int) string {
 		b[i] = letter[rand.Intn(len(letter))]
 	}
 	return string(b)
+}
+
+// 从time.date中获取当天日期
+func GetDate() string {
+	return time.Now().Format("2006-01-02")
+}
+
+// string转int64
+func StrToInt64(str string) int64 {
+	i, _ := strconv.ParseInt(str, 10, 64)
+	return i
+}
+
+// InArray 判断字符串是否在数组中
+func InArray(arr []string, str string) bool {
+	for _, v := range arr {
+		if v == str {
+			return true
+		}
+	}
+	return false
+}
+
+// GetRand 获取随机数
+func GetRand(min, max int) int {
+	rand.Seed(time.Now().UnixNano())
+	return rand.Intn(max-min) + min
+}
+
+// UintToStr uint转string
+func UintToStr(i uint) string {
+	return strconv.FormatUint(uint64(i), 10)
 }

@@ -10,11 +10,12 @@ import (
 	"FlyCloud/serves/cache"
 	"FlyCloud/serves/database"
 	"FlyCloud/serves/logging"
+	"net/http"
+
 	"github.com/allegro/bigcache"
 	"github.com/gin-gonic/gin"
 	validation "github.com/go-ozzo/ozzo-validation/v3"
 	"github.com/jinzhu/gorm"
-	"net/http"
 )
 
 // @Title CommonController
@@ -252,7 +253,9 @@ func (c commonController) GetCaptcha(ctx *gin.Context) {
 // 实例化公共操作控制器
 func NewCommonController() *commonController {
 	db := database.GetDB()
+	// 初始化Admin表
 	models.InitAdminTable(db)
+
 	return &commonController{
 		Db:    db,
 		Cache: cache.GetCacheObj(),

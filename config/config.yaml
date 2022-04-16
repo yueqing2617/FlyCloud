@@ -1,14 +1,14 @@
 database:
   type: "sqlite3" #
-#  host: "127.0.0.1" # 当前服务器地址，连接类型为sqlite时，该项无效
-#  port: 3306
+  host: "127.0.0.1" # 当前服务器地址，连接类型为sqlite时，该项无效
+  port: 3306
   database: "./database/database.db" # 数据库名称，连接类型为sqlite时，该项为文件名
-#  username: "root" # 数据库用户名，连接类型为sqlite时，该项无效
-#  password: "123456" # 数据库密码，连接类型为sqlite时，该项无效
-#  max_idle_time: 3600 # 最大空闲时间，单位秒
-#  max_open_conns: 100 # 最大连接数
-#  conn_max_lifetime: 3600 # 连接最大存活时间，单位秒
-#  suffix: "charset=utf8&collation=utf8_general_ci&parseTime=True&loc=Local" # mysql数据库连接参数
+  username: "root" # 数据库用户名，连接类型为sqlite时，该项无效
+  password: "123456" # 数据库密码，连接类型为sqlite时，该项无效
+  max_idle_time: 3600 # 最大空闲时间，单位秒
+  max_open_conns: 100 # 最大连接数
+  conn_max_lifetime: 3600 # 连接最大存活时间，单位秒
+  suffix: "charset=utf8&collation=utf8_general_ci&parseTime=True&loc=Local" # mysql数据库连接参数
 
 logger:
   path: "./runtime/logger.log"
